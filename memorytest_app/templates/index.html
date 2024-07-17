@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기억력 테스트 게임</title>
+    <style>
+        .words-list {
+            font-size: 2em;  /* 글자 크기를 2배로 */
+        }
+        #time {
+            font-size: 1.5em;
+            color: red;
+        }
+        .input-word {
+            font-size: 1.5em;  /* 입력 폼의 글자 크기를 1.5배로 */
+        }
+    </style>
+    <script>
+        function startTimer(duration) {
+            var timer = duration, seconds;
+            var display = document.getElementById('time');
+            var interval = setInterval(function () {
+                seconds = parseInt(timer % 60, 10);
+
+                display.textContent = seconds + "초 남음";
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    document.getElementById('memory-test-form').style.display = 'block';
+                    document.getElementById('words-display').style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var wordsCount = {{ words|length }};
+            var timePerWord = 3;
+            var totalTime = wordsCount * timePerWord;
+            startTimer(totalTime);
+        };
+    </script>
+</head>
+<body>
+    <h1>기억력 테스트 게임</h1>
+    <div id="words-display">
+        <h2>이 단어들을 기억하세요:</h2>
+        <ul class="words-list">
+            {% for word in words %}
+                <li>{{ word }}</li>
+            {% endfor %}
+        </ul>
+        <div id="time"></div>
+    </div>
+    <form id="memory-test-form" action="{% url 'check' %}" method="post" style="display:none;">
+        {% csrf_token %}
+        {% for word in words %}
+            <input type="hidden" name="correct_words" value="{{ word }}">
+        {% endfor %}
+        <h2>기억하는 단어들을 입력하세요:</h2>
+        {% for i in words %}
+            <input type="text" name="words" class="input-word">
+        {% endfor %}
+        <button type="submit">제출</button>
+    </form>
+</body>
+</html>
