@@ -30,21 +30,26 @@
         .words-list li {
             margin: 10px 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* 중앙 정렬 */
             align-items: center;
         }
         .input-word {
             font-size: 1em; /* 입력 폼의 글자 크기 */
             padding: 5px;
             width: 200px;
+            text-align: center;
+            margin: 5px;
+        }
+        .hidden-word {
+            color: transparent; /* 글자를 투명하게 설정 */
         }
         #time {
             font-size: 1.5em;
             color: red;
             position: absolute;
             top: 50%;
-            right: -150px;
             transform: translateY(-50%);
+            right: -100px; /* form의 오른쪽에서 100px 간격 */
         }
         .btn-submit {
             font-size: 1.2em;
@@ -59,10 +64,15 @@
             background-color: #0056b3;
         }
         .hidden-words {
-            display: none;
+            visibility: hidden;
         }
-        .hidden-inputs {
-            display: block;
+        #memory-test-form {
+            position: relative;
+        }
+        #input-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 중앙 정렬 */
         }
     </style>
     <script>
@@ -78,7 +88,11 @@
                     clearInterval(interval);
                     var inputs = document.querySelectorAll('.input-word');
                     inputs.forEach(function(input) {
-                        input.disabled = false;
+                        if (input.disabled) {
+                            input.classList.add('hidden-word');
+                        } else {
+                            input.disabled = false;
+                        }
                     });
                     document.getElementById('words-display').classList.add('hidden-words');
                     document.getElementById('memory-test-form').style.display = 'block';
@@ -103,24 +117,30 @@
         <div id="words-display">
             <ul class="words-list">
                 {% for word in words %}
-                    <li>{{ word }} <input type="text" class="input-word" disabled></li>
+                    <li>
+                        <input type="text" class="input-word" value="{{ word }}" disabled>
+                        <input type="text" class="input-word" disabled>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
-        <form id="memory-test-form" action="{% url 'check' %}" method="post" style="display:none;">
+        <form id="memory-test-form" action="{% url 'check' %}" method="post" style="display:none; position: relative;">
             {% csrf_token %}
             {% for word in words %}
                 <input type="hidden" name="correct_words" value="{{ word }}">
             {% endfor %}
-            <ul class="words-list">
-                {% for i in words %}
-                    <li><input type="text" name="words" class="input-word"></li>
+            <ul class="words-list" id="input-list">
+                {% for word in words %}
+                    <li>
+                        <input type="text" class="input-word hidden-word" value="{{ word }}" disabled>
+                        <input type="text" name="words" class="input-word">
+                    </li>
                 {% endfor %}
             </ul>
             <br>
             <button type="submit" class="btn-submit">제출</button>
         </form>
+        <div id="time"></div>
     </div>
-    <div id="time"></div>
 </body>
 </html>

@@ -3,15 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>결과</title>
+    <title>기억력 테스트 게임 - 결과</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .words-list {
+            font-size: 1.5em; /* 글자 크기를 1.5배로 */
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .words-list li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input-word {
+            font-size: 1em; /* 입력 폼의 글자 크기 */
+            padding: 5px;
+            width: 200px;
+            border: 2px solid #000; /* 기본 테두리 색상 */
+        }
+        .correct {
+            border-color: blue; /* 맞춘 단어의 테두리 색상 */
+        }
+        .incorrect {
+            border-color: red; /* 틀린 단어의 테두리 색상 */
+        }
+        .btn-retry {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-retry:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-    <h1>결과</h1>
-    {% if correct_count == total %}
-        <p>정답입니다! {{ total }}개의 단어를 모두 맞췄습니다.</p>
-    {% else %}
-        <p>오답입니다. {{ total }}개의 단어 중 {{ correct_count }}개를 맞췄습니다.</p>
-    {% endif %}
-    <a href="{% url 'index' %}">다시하기</a>
+    <div class="container">
+        <h1>기억력 테스트 게임</h1>
+        <p>{{ message }}</p>
+        <ul class="words-list">
+            {% for i in correct_words %}
+                <li>
+                    <span>{{ correct_words|slice:forloop.counter0 }}</span>
+                    <input type="text" class="input-word {% if given_words|slice:forloop.counter0 == correct_words|slice:forloop.counter0 %}correct{% else %}incorrect{% endif %}" value="{{ given_words|slice:forloop.counter0 }}" disabled>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'index' %}" class="btn-retry">다시 하기</a>
+    </div>
 </body>
 </html>
