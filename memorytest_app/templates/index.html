@@ -64,7 +64,7 @@
             background-color: #0056b3;
         }
         .hidden-words {
-            visibility: hidden;
+            display: none;
         }
         #memory-test-form {
             position: relative;
@@ -94,7 +94,7 @@
                             input.disabled = false;
                         }
                     });
-                    document.getElementById('words-display').classList.add('hidden-words');
+                    document.getElementById('words-display').remove();
                     document.getElementById('memory-test-form').style.display = 'block';
                     document.getElementById('instruction').textContent = '기억한 단어들을 순서대로 입력하세요';
                     display.textContent = '';

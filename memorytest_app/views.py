@@ -36,7 +36,7 @@ def check(request):
             message = f"정답입니다! {total}개의 단어를 모두 맞췄습니다."
         else:
             request.session['level'] = 3  # 틀린 경우 다시 3개로 초기화
-            message = f"오답입니다. {total}개의 단어 중 {correct_count}개를 맞췄습니다."
+            message = f"틀렸습니다. {total}개의 단어 중 {correct_count}개를 맞췄습니다."
 
         context = {
             'message': message,
