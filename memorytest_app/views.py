@@ -38,10 +38,13 @@ def check(request):
             request.session['level'] = 3  # 틀린 경우 다시 3개로 초기화
             message = f"틀렸습니다. {total}개의 단어 중 {correct_count}개를 맞췄습니다."
 
+        # 인덱스를 포함한 튜플 리스트 생성
+        word_pairs = [(correct_word, given_word) for correct_word, given_word in zip(correct_words, given_words)]
+
         context = {
             'message': message,
-            'given_words': given_words,
-            'correct_words': correct_words
+            'word_pairs': word_pairs,
+            'total': total
         }
         return render(request, 'result.html', context)
     return HttpResponse("Invalid request")

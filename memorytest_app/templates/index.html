@@ -74,6 +74,12 @@
             flex-direction: column;
             align-items: center; /* 중앙 정렬 */
         }
+        .instructions {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
     </style>
     <script>
         function startTimer(duration) {
@@ -92,12 +98,15 @@
                             input.classList.add('hidden-word');
                         } else {
                             input.disabled = false;
+                            input.value = '';  // 입력창 초기화
                         }
                     });
                     document.getElementById('words-display').remove();
                     document.getElementById('memory-test-form').style.display = 'block';
                     document.getElementById('instruction').textContent = '기억한 단어들을 순서대로 입력하세요';
                     display.textContent = '';
+                    // 첫 번째 입력창으로 커서 이동
+                    document.querySelector('.input-word:not([disabled])').focus();
                 }
             }, 1000);
         }
@@ -139,6 +148,11 @@
             </ul>
             <br>
             <button type="submit" class="btn-submit">제출</button>
+            <div class="instructions">
+                아래 칸으로 이동 : Tab 버튼<br>
+                위 칸으로 이동 : Shift버튼 누르고 있는 상태에서 Tab 버튼<br>
+                제출 : Enter
+            </div>
         </form>
         <div id="time"></div>
     </div>

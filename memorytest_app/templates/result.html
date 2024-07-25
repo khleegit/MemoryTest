@@ -48,9 +48,6 @@
         .incorrect {
             border-color: red; /* 틀린 단어의 테두리 색상 */
         }
-        .hidden-word {
-            color: transparent; /* 글자를 투명하게 설정 */
-        }
         .btn-retry {
             font-size: 1.2em;
             padding: 10px 20px;
@@ -65,21 +62,32 @@
             background-color: #218838;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var message = "{{ message }}";
+            if (message.indexOf("정답입니다!") !== -1) {
+                setTimeout(function() {
+                    window.location.href = "{% url 'index' %}";
+                }, 3000); // 3초 후 자동으로 다음 단계로 이동
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>기억력 테스트 게임</h1>
         <p>{{ message }}</p>
-        {% load range_filter %}
         <ul class="words-list">
-            {% for i in correct_words|length|range_filter %}
+            {% for correct_word, given_word in word_pairs %}
                 <li>
-                    <input type="text" class="input-word" value="{{ correct_words|slice:i:i|join }}" disabled>
-                    <input type="text" class="input-word {% if correct_words|slice:i:i|join == given_words|slice:i:i|join %}correct{% else %}incorrect{% endif %}" value="{{ given_words|slice:i:i|join }}" disabled>
+                    <input type="text" class="input-word" value="{{ correct_word }}" disabled>
+                    <input type="text" class="input-word {% if correct_word == given_word %}correct{% else %}incorrect{% endif %}" value="{{ given_word }}" disabled>
                 </li>
             {% endfor %}
         </ul>
-        <a href="{% url 'index' %}" class="btn-retry">다시 하기</a>
+        {% if not "정답입니다!" in message %}
+            <a href="{% url 'index' %}" class="btn-retry">다시 하기</a>
+        {% endif %}
     </div>
 </body>
 </html>
